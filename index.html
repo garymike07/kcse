@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCSE Dynamic Exam Simulator</title>
+    <meta name="description" content="Comprehensive KCSE exam preparation platform for Kenyan Form 1-4 students">
+    <meta name="theme-color" content="#1e40af">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <h1>KCSE</h1>
+                <p>Dynamic Exam Simulator</p>
+            </div>
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Preparing your exam environment...</p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>KCSE Simulator</h1>
+                </div>
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-page="dashboard">
+                        <span class="nav-icon">🏠</span>
+                        Dashboard
+                    </button>
+                    <button class="nav-btn" data-page="exams">
+                        <span class="nav-icon">📝</span>
+                        Exams
+                    </button>
+                    <button class="nav-btn" data-page="analytics">
+                        <span class="nav-icon">📊</span>
+                        Analytics
+                    </button>
+                    <button class="nav-btn" data-page="study-tools">
+                        <span class="nav-icon">📚</span>
+                        Study Tools
+                    </button>
+                    <button class="nav-btn" data-page="profile">
+                        <span class="nav-icon">👤</span>
+                        Profile
+                    </button>
+                </nav>
+                <div class="header-actions">
+                    <button class="notification-btn">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="settings-btn">⚙️</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <div class="dashboard-header">
+                    <div class="welcome-section">
+                        <h2 id="welcome-message">Welcome back, Student!</h2>
+                        <p id="current-date"></p>
+                        <div class="kcse-countdown">
+                            <span class="countdown-label">KCSE Countdown:</span>
+                            <span id="kcse-countdown" class="countdown-value">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="study-streak">0</span>
+                                <span class="stat-label">Day Streak</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="avg-score">0%</span>
+                                <span class="stat-label">Avg Score</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="achievements-count">0</span>
+                                <span class="stat-label">Achievements</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <!-- Daily Challenge -->
+                    <section class="daily-challenge">
+                        <h3>Today's Challenge</h3>
+                        <div class="challenge-card">
+                            <div class="challenge-info">
+                                <h4 id="daily-challenge-title">Mathematics Practice</h4>
+                                <p id="daily-challenge-desc">Focus on your weakest topic: Algebra</p>
+                                <div class="challenge-meta">
+                                    <span class="challenge-duration">⏱️ 30 minutes</span>
+                                    <span class="challenge-reward">🏆 50 XP</span>
+                                </div>
+                            </div>
+                            <button class="challenge-btn">Start Challenge</button>
+                        </div>
+                    </section>
+
+                    <!-- Quick Access Subjects -->
+                    <section class="quick-subjects">
+                        <h3>Quick Access</h3>
+                        <div class="subjects-grid">
+                            <div class="subject-card" data-subject="mathematics">
+                                <div class="subject-icon">🔢</div>
+                                <h4>Mathematics</h4>
+                                <p>Last score: 78%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-card" data-subject="english">
+                                <div class="subject-icon">📖</div>
+                                <h4>English</h4>
+                                <p>Last score: 85%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-card" data-subject="kiswahili">
+                                <div class="subject-icon">🗣️</div>
+                                <h4>Kiswahili</h4>
+                                <p>Last score: 72%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 72%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-card" data-subject="biology">
+                                <div class="subject-icon">🧬</div>
+                                <h4>Biology</h4>
+                                <p>Last score: 91%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 91%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-card" data-subject="chemistry">
+                                <div class="subject-icon">⚗️</div>
+                                <h4>Chemistry</h4>
+                                <p>Last score: 68%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 68%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="subject-card" data-subject="physics">
+                                <div class="subject-icon">⚡</div>
+                                <h4>Physics</h4>
+                                <p>Last score: 74%</p>
+                                <div class="subject-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 74%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Recent Activity -->
+                    <section class="recent-activity">
+                        <h3>Recent Activity</h3>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">📝</div>
+                                <div class="activity-info">
+                                    <p><strong>Mathematics Mock Exam</strong> completed</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                                <div class="activity-score">78%</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">🏆</div>
+                                <div class="activity-info">
+                                    <p><strong>Achievement Unlocked:</strong> Biology Master</p>
+                                    <span class="activity-time">1 day ago</span>
+                                </div>
+                                <div class="activity-badge">New!</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">📚</div>
+                                <div class="activity-info">
+                                    <p><strong>Chemistry Practice</strong> session</p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                                <div class="activity-score">85%</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Motivational Quote -->
+                    <section class="motivation-section">
+                        <div class="quote-card">
+                            <div class="quote-icon">💡</div>
+                            <blockquote id="daily-quote">
+                                "Success is not final, failure is not fatal: it is the courage to continue that counts."
+                            </blockquote>
+                            <cite id="quote-author">- Winston Churchill</cite>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Exams Page -->
+            <div id="exams-page" class="page">
+                <div class="page-header">
+                    <h2>Exam Selection</h2>
+                    <p>Choose your exam parameters and start practicing</p>
+                </div>
+
+                <div class="exam-filters">
+                    <div class="filter-group">
+                        <label for="subject-select">Subject:</label>
+                        <select id="subject-select" class="filter-select">
+                            <option value="">All Subjects</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="english">English</option>
+                            <option value="kiswahili">Kiswahili</option>
+                            <option value="biology">Biology</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="physics">Physics</option>
+                            <option value="history">History</option>
+                            <option value="geography">Geography</option>
+                            <option value="cre">CRE</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="difficulty-select">Difficulty:</label>
+                        <select id="difficulty-select" class="filter-select">
+                            <option value="beginner">Beginner (Form 1-2)</option>
+                            <option value="intermediate">Intermediate (Form 3)</option>
+                            <option value="advanced">Advanced (Form 4)</option>
+                            <option value="kcse-mock">KCSE Mock</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="duration-select">Duration:</label>
+                        <select id="duration-select" class="filter-select">
+                            <option value="15">Quick Quiz (15 min)</option>
+                            <option value="30">Practice Test (30 min)</option>
+                            <option value="60">Standard Test (1 hour)</option>
+                            <option value="180">Full Exam (3 hours)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="question-type-select">Question Type:</label>
+                        <select id="question-type-select" class="filter-select">
+                            <option value="mixed">Mixed Questions</option>
+                            <option value="mcq">Multiple Choice</option>
+                            <option value="short-answer">Short Answer</option>
+                            <option value="essays">Essays</option>
+                            <option value="calculations">Calculations</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="exam-recommendations">
+                    <h3>Recommended for You</h3>
+                    <div class="recommendations-grid">
+                        <div class="recommendation-card">
+                            <div class="rec-header">
+                                <h4>Mathematics Weakness Focus</h4>
+                                <span class="rec-badge">Recommended</span>
+                            </div>
+                            <p>Based on your recent performance, focus on Algebra and Geometry</p>
+                            <div class="rec-meta">
+                                <span>⏱️ 45 minutes</span>
+                                <span>📊 Intermediate</span>
+                                <span>🎯 Targeted</span>
+                            </div>
+                            <button class="rec-btn">Start Exam</button>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <div class="rec-header">
+                                <h4>Mixed Science Review</h4>
+                                <span class="rec-badge">Popular</span>
+                            </div>
+                            <p>Comprehensive review covering Biology, Chemistry, and Physics</p>
+                            <div class="rec-meta">
+                                <span>⏱️ 60 minutes</span>
+                                <span>📊 Advanced</span>
+                                <span>🔬 Sciences</span>
+                            </div>
+                            <button class="rec-btn">Start Exam</button>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <div class="rec-header">
+                                <h4>KCSE Mock Simulation</h4>
+                                <span class="rec-badge">Challenge</span>
+                            </div>
+                            <p>Full KCSE format exam to test your readiness</p>
+                            <div class="rec-meta">
+                                <span>⏱️ 180 minutes</span>
+                                <span>📊 KCSE Level</span>
+                                <span>🏆 Full Exam</span>
+                            </div>
+                            <button class="rec-btn">Start Exam</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-exam-section">
+                    <h3>Create Custom Exam</h3>
+                    <div class="custom-exam-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="custom-subjects">Select Subjects:</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="mathematics"> Mathematics
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="english"> English
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="kiswahili"> Kiswahili
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="biology"> Biology
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="chemistry"> Chemistry
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="physics"> Physics
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="custom-topics">Specific Topics (Optional):</label>
+                                <textarea id="custom-topics" placeholder="Enter specific topics you want to focus on..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="custom-questions">Number of Questions:</label>
+                                <input type="number" id="custom-questions" min="5" max="50" value="20">
+                            </div>
+                            <div class="form-group">
+                                <label for="custom-marks">Total Marks:</label>
+                                <input type="number" id="custom-marks" min="20" max="200" value="80">
+                            </div>
+                        </div>
+
+                        <button class="generate-exam-btn">Generate Custom Exam</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analytics-page" class="page">
+                <div class="page-header">
+                    <h2>Performance Analytics</h2>
+                    <p>Track your progress and identify areas for improvement</p>
+                </div>
+
+                <div class="analytics-overview">
+                    <div class="overview-cards">
+                        <div class="overview-card">
+                            <div class="card-icon">📈</div>
+                            <div class="card-content">
+                                <h3>Overall Progress</h3>
+                                <div class="progress-circle">
+                                    <canvas id="overall-progress-chart"></canvas>
+                                    <div class="progress-text">
+                                        <span class="progress-value">78%</span>
+                                        <span class="progress-label">Ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="card-icon">🎯</div>
+                            <div class="card-content">
+                                <h3>Predicted Grade</h3>
+                                <div class="grade-prediction">
+                                    <span class="predicted-grade">B+</span>
+                                    <span class="grade-confidence">85% confidence</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="card-icon">⏱️</div>
+                            <div class="card-content">
+                                <h3>Study Time</h3>
+                                <div class="study-time">
+                                    <span class="time-value">24.5</span>
+                                    <span class="time-unit">hours this week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-charts">
+                    <div class="chart-section">
+                        <h3>Subject Performance</h3>
+                        <div class="chart-container">
+                            <canvas id="subject-performance-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Progress Over Time</h3>
+                        <div class="chart-container">
+                            <canvas id="progress-timeline-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Topic Mastery Heatmap</h3>
+                        <div class="heatmap-container">
+                            <div class="heatmap-grid" id="topic-heatmap">
+                                <!-- Heatmap will be generated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detailed-analytics">
+                    <div class="analytics-tabs">
+                        <button class="tab-btn active" data-tab="strengths">Strengths</button>
+                        <button class="tab-btn" data-tab="weaknesses">Weaknesses</button>
+                        <button class="tab-btn" data-tab="recommendations">Recommendations</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="strengths-tab" class="tab-panel active">
+                            <h4>Your Strengths</h4>
+                            <div class="strengths-list">
+                                <div class="strength-item">
+                                    <div class="strength-icon">🧬</div>
+                                    <div class="strength-info">
+                                        <h5>Biology - Cell Structure</h5>
+                                        <p>Consistently scoring 90%+ in this topic</p>
+                                        <div class="strength-score">Mastery: 95%</div>
+                                    </div>
+                                </div>
+                                <div class="strength-item">
+                                    <div class="strength-icon">📖</div>
+                                    <div class="strength-info">
+                                        <h5>English - Comprehension</h5>
+                                        <p>Excellent reading and analysis skills</p>
+                                        <div class="strength-score">Mastery: 88%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="weaknesses-tab" class="tab-panel">
+                            <h4>Areas for Improvement</h4>
+                            <div class="weaknesses-list">
+                                <div class="weakness-item">
+                                    <div class="weakness-icon">🔢</div>
+                                    <div class="weakness-info">
+                                        <h5>Mathematics - Algebra</h5>
+                                        <p>Need more practice with quadratic equations</p>
+                                        <div class="weakness-score">Current: 65%</div>
+                                        <button class="practice-btn">Practice Now</button>
+                                    </div>
+                                </div>
+                                <div class="weakness-item">
+                                    <div class="weakness-icon">⚗️</div>
+                                    <div class="weakness-info">
+                                        <h5>Chemistry - Organic Chemistry</h5>
+                                        <p>Struggling with reaction mechanisms</p>
+                                        <div class="weakness-score">Current: 58%</div>
+                                        <button class="practice-btn">Practice Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="recommendations-tab" class="tab-panel">
+                            <h4>Personalized Recommendations</h4>
+                            <div class="recommendations-list">
+                                <div class="recommendation-item">
+                                    <div class="rec-priority high">High Priority</div>
+                                    <div class="rec-content">
+                                        <h5>Focus on Mathematics Algebra</h5>
+                                        <p>Spend 30 minutes daily on quadratic equations and factoring</p>
+                                        <div class="rec-actions">
+                                            <button class="rec-action-btn">Start Practice</button>
+                                            <button class="rec-action-btn secondary">View Resources</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="recommendation-item">
+                                    <div class="rec-priority medium">Medium Priority</div>
+                                    <div class="rec-content">
+                                        <h5>Review Chemistry Bonding</h5>
+                                        <p>Strengthen understanding of ionic and covalent bonds</p>
+                                        <div class="rec-actions">
+                                            <button class="rec-action-btn">Start Practice</button>
+                                            <button class="rec-action-btn secondary">View Resources</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Tools Page -->
+            <div id="study-tools-page" class="page">
+                <div class="page-header">
+                    <h2>Study Tools</h2>
+                    <p>Additional resources to enhance your learning</p>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">📋</div>
+                        <h3>Formula Sheets</h3>
+                        <p>Quick reference for Mathematics, Physics, and Chemistry formulas</p>
+                        <button class="tool-btn">Access Formulas</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🗂️</div>
+                        <h3>Past Papers</h3>
+                        <p>Official KCSE papers from previous years</p>
+                        <button class="tool-btn">Browse Papers</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">📚</div>
+                        <h3>Revision Notes</h3>
+                        <p>AI-generated summaries of key topics</p>
+                        <button class="tool-btn">View Notes</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🎴</div>
+                        <h3>Flashcards</h3>
+                        <p>Spaced repetition system for memorization</p>
+                        <button class="tool-btn">Start Flashcards</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">👥</div>
+                        <h3>Study Groups</h3>
+                        <p>Join or create virtual study sessions</p>
+                        <button class="tool-btn">Find Groups</button>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon">🏆</div>
+                        <h3>Challenges</h3>
+                        <p>Compete with peers on specific topics</p>
+                        <button class="tool-btn">View Challenges</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="page-header">
+                    <h2>Profile & Settings</h2>
+                    <p>Manage your account and preferences</p>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <h3>Personal Information</h3>
+                        <div class="profile-form">
+                            <div class="form-group">
+                                <label for="student-name">Full Name:</label>
+                                <input type="text" id="student-name" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="student-form">Form Level:</label>
+                                <select id="student-form">
+                                    <option value="1">Form 1</option>
+                                    <option value="2">Form 2</option>
+                                    <option value="3">Form 3</option>
+                                    <option value="4">Form 4</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-school">School:</label>
+                                <input type="text" id="student-school" placeholder="Enter your school name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3>Study Preferences</h3>
+                        <div class="preferences-form">
+                            <div class="form-group">
+                                <label>Preferred Subjects:</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="mathematics" checked> Mathematics
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="english" checked> English
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="kiswahili" checked> Kiswahili
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="biology" checked> Biology
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="chemistry"> Chemistry
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" value="physics"> Physics
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="study-goal">Daily Study Goal (minutes):</label>
+                                <input type="number" id="study-goal" min="15" max="480" value="60">
+                            </div>
+                            <div class="form-group">
+                                <label for="notification-time">Study Reminder Time:</label>
+                                <input type="time" id="notification-time" value="19:00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3>Achievements</h3>
+                        <div class="achievements-grid">
+                            <div class="achievement-badge earned">
+                                <div class="badge-icon">🏆</div>
+                                <div class="badge-info">
+                                    <h4>First Exam</h4>
+                                    <p>Completed your first practice exam</p>
+                                </div>
+                            </div>
+                            <div class="achievement-badge earned">
+                                <div class="badge-icon">🔥</div>
+                                <div class="badge-info">
+                                    <h4>7-Day Streak</h4>
+                                    <p>Studied for 7 consecutive days</p>
+                                </div>
+                            </div>
+                            <div class="achievement-badge">
+                                <div class="badge-icon">📚</div>
+                                <div class="badge-info">
+                                    <h4>Subject Master</h4>
+                                    <p>Score 90%+ in any subject</p>
+                                </div>
+                            </div>
+                            <div class="achievement-badge">
+                                <div class="badge-icon">⚡</div>
+                                <div class="badge-info">
+                                    <h4>Speed Demon</h4>
+                                    <p>Complete an exam in record time</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button class="save-profile-btn">Save Changes</button>
+                        <button class="export-data-btn">Export Progress Data</button>
+                        <button class="reset-data-btn">Reset All Data</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Exam Modal -->
+        <div id="exam-modal" class="modal">
+            <div class="modal-content exam-interface">
+                <div class="exam-header">
+                    <div class="exam-info">
+                        <h3 id="exam-title">Mathematics Practice Exam</h3>
+                        <p id="exam-details">Form 4 • 60 minutes • 80 marks</p>
+                    </div>
+                    <div class="exam-timer">
+                        <div class="timer-display">
+                            <span id="timer-minutes">60</span>:<span id="timer-seconds">00</span>
+                        </div>
+                        <div class="timer-controls">
+                            <button id="pause-timer">⏸️</button>
+                            <button id="submit-exam">Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exam-content">
+                    <div class="question-navigation">
+                        <div class="question-numbers" id="question-nav">
+                            <!-- Question numbers will be generated by JavaScript -->
+                        </div>
+                        <div class="nav-legend">
+                            <span class="legend-item"><span class="legend-color current"></span> Current</span>
+                            <span class="legend-item"><span class="legend-color answered"></span> Answered</span>
+                            <span class="legend-item"><span class="legend-color flagged"></span> Flagged</span>
+                        </div>
+                    </div>
+
+                    <div class="question-area">
+                        <div class="question-header">
+                            <span class="question-number">Question 1 of 20</span>
+                            <button class="flag-question">🚩 Flag</button>
+                        </div>
+                        
+                        <div class="question-content" id="current-question">
+                            <!-- Question content will be loaded here -->
+                        </div>
+
+                        <div class="answer-area" id="answer-area">
+                            <!-- Answer input will be generated based on question type -->
+                        </div>
+
+                        <div class="question-controls">
+                            <button id="prev-question" disabled>← Previous</button>
+                            <button id="next-question">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Modal -->
+        <div id="results-modal" class="modal">
+            <div class="modal-content results-interface">
+                <div class="results-header">
+                    <h2>Exam Results</h2>
+                    <button class="close-modal">×</button>
+                </div>
+                
+                <div class="results-summary">
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span class="score-value" id="final-score">78%</span>
+                            <span class="score-grade" id="final-grade">B+</span>
+                        </div>
+                    </div>
+                    
+                    <div class="score-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Correct Answers:</span>
+                            <span class="breakdown-value" id="correct-answers">15/20</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Time Taken:</span>
+                            <span class="breakdown-value" id="time-taken">45:30</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Marks Scored:</span>
+                            <span class="breakdown-value" id="marks-scored">62/80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-analysis">
+                    <div class="analysis-tabs">
+                        <button class="tab-btn active" data-tab="overview">Overview</button>
+                        <button class="tab-btn" data-tab="questions">Question Review</button>
+                        <button class="tab-btn" data-tab="feedback">Feedback</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="overview-tab" class="tab-panel active">
+                            <div class="performance-chart">
+                                <canvas id="results-chart"></canvas>
+                            </div>
+                            <div class="key-insights">
+                                <h4>Key Insights</h4>
+                                <ul id="insights-list">
+                                    <li>Strong performance in algebra questions</li>
+                                    <li>Need improvement in geometry problems</li>
+                                    <li>Good time management overall</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="questions-tab" class="tab-panel">
+                            <div class="question-review" id="question-review">
+                                <!-- Question-by-question review will be generated -->
+                            </div>
+                        </div>
+
+                        <div id="feedback-tab" class="tab-panel">
+                            <div class="ai-feedback" id="ai-feedback">
+                                <h4>Personalized Feedback</h4>
+                                <p>Loading AI analysis...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="action-btn primary">Retake Exam</button>
+                    <button class="action-btn secondary">Practice Weak Areas</button>
+                    <button class="action-btn secondary">Download Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
+
