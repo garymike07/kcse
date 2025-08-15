@@ -131,6 +131,40 @@ const KCSE_STRUCTURES = {
   }
 };
 
+// Question Bank for KCSE Subjects
+const QUESTION_BANK = {
+  mathematics: [
+    { topic: 'Numbers', type: 'mcq', question: 'What is the value of 2³ + 3²?', options: ['17', '12', '15', '25'], correct: 0, marks: 2 },
+    { topic: 'Algebraic Expressions', type: 'calculation', question: 'Simplify the expression: 3(x + 2y) - 2(2x - y)', answer: '-x + 8y', marks: 3 },
+    { topic: 'Linear Equations', type: 'calculation', question: 'Solve for y: 4y - 8 = 2y + 2', answer: 'y = 5', marks: 3 },
+    { topic: 'Geometry', type: 'calculation', question: 'The angles of a triangle are in the ratio 1:2:3. Find the size of the largest angle.', answer: '90 degrees', marks: 3 },
+    { topic: 'Calculus (Differentiation and Integration)', type: 'calculation', question: "Find the derivative of f(x) = 3x² + 7x - 2.", answer: "f'(x) = 6x + 7", marks: 4},
+    { topic: 'Matrices', type: 'mcq', question: 'Given matrix A = [[2, 1], [3, 4]], find its determinant.', options: ['5', '11', '-5', '8'], correct: 0, marks: 2 },
+    { topic: 'Trigonometry', type: 'calculation', question: 'If sin(θ) = 0.5, find θ for 0° < θ < 90°', answer: '30°', marks: 2 },
+    { topic: 'Statistics', type: 'mcq', question: 'What is the mode of the following set of numbers: 2, 4, 5, 5, 6, 7?', options: ['2', '4', '5', '6'], correct: 2, marks: 1 }
+  ],
+  chemistry: [
+    { topic: 'Introduction to Chemistry', type: 'mcq', question: 'Which of the following apparatus is most suitable for accurately measuring 25.0 cm³ of a solution?', options: ['Beaker', 'Measuring cylinder', 'Pipette', 'Conical flask'], correct: 2, marks: 1 },
+    { topic: 'Acids, Bases and Indicators', type: 'mcq', question: 'Which of the following is a property of an acidic solution?', options: ['Has a pH greater than 7', 'Turns red litmus paper blue', 'Feels soapy', 'Reacts with metals to produce hydrogen gas'], correct: 3, marks: 1 },
+    { topic: 'The Mole Concept', type: 'calculation', question: 'Calculate the number of moles in 36g of water (H₂O). (H=1, O=16)', answer: '2 moles', marks: 3 },
+    { topic: 'Organic Chemistry I (Hydrocarbons)', type: 'mcq', question: 'What is the general formula for alkanes?', options: ['CnH2n', 'CnH2n+2', 'CnH2n-2', 'CnHn'], correct: 1, marks: 1 },
+    { topic: 'Radioactivity', type: 'mcq', question: 'Which type of radiation is a high-energy electron?', options: ['Alpha particle', 'Beta particle', 'Gamma ray', 'Neutron'], correct: 1, marks: 1 },
+    { topic: 'Structure and Bonding', type: 'mcq', question: 'What type of bonding is present in a diamond?', options: ['Ionic', 'Metallic', 'Covalent', 'Van der Waals'], correct: 2, marks: 1 }
+  ],
+  biology: [
+    { topic: 'The Cell', type: 'mcq', question: 'Which organelle is known as the "powerhouse" of the cell?', options: ['Nucleus', 'Ribosome', 'Mitochondrion', 'Chloroplast'], correct: 2, marks: 1 },
+    { topic: 'Nutrition in Plants and Animals', type: 'mcq', question: 'What is the primary function of bile in digestion?', options: ['Breaking down proteins', 'Emulsifying fats', 'Digesting carbohydrates', 'Absorbing vitamins'], correct: 1, marks: 1 },
+    { topic: 'Genetics', type: 'short-answer', question: 'Define the term "phenotype".', answer: 'The observable physical properties of an organism.', marks: 2 },
+    { topic: 'Ecology', type: 'mcq', question: 'Which of the following is a biotic factor in an ecosystem?', options: ['Sunlight', 'Temperature', 'Bacteria', 'Water'], correct: 2, marks: 1 }
+  ],
+  physics: [
+    { topic: 'Force', type: 'calculation', question: 'A force of 20N acts on an object of mass 5kg. Calculate the acceleration.', answer: '4 m/s²', marks: 2 },
+    { topic: 'Waves', type: 'mcq', question: 'Which of the following is a transverse wave?', options: ['Sound', 'Light', 'Ultrasound', 'Shockwave'], correct: 1, marks: 1 },
+    { topic: 'Electronics', type: 'short-answer', question: 'What does the acronym LED stand for?', answer: 'Light Emitting Diode', marks: 1 },
+    { topic: 'Thin Lenses', type: 'mcq', question: 'A converging lens is also known as a...', options: ['Concave lens', 'Convex lens', 'Plane mirror', 'Prism'], correct: 1, marks: 1 }
+  ]
+};
+
 // KCSE Dynamic Exam Simulator - JavaScript
 
 // Application State
@@ -277,39 +311,6 @@ class KCSEApp {
         structure: paperStructure
     };
   }
-
-const QUESTION_BANK = {
-  mathematics: [
-    { topic: 'Numbers', type: 'mcq', question: 'What is the value of 2³ + 3²?', options: ['17', '12', '15', '25'], correct: 0, marks: 2 },
-    { topic: 'Algebraic Expressions', type: 'calculation', question: 'Simplify the expression: 3(x + 2y) - 2(2x - y)', answer: '-x + 8y', marks: 3 },
-    { topic: 'Linear Equations', type: 'calculation', question: 'Solve for y: 4y - 8 = 2y + 2', answer: 'y = 5', marks: 3 },
-    { topic: 'Geometry', type: 'calculation', question: 'The angles of a triangle are in the ratio 1:2:3. Find the size of the largest angle.', answer: '90 degrees', marks: 3 },
-    { topic: 'Calculus (Differentiation and Integration)', type: 'calculation', question: "Find the derivative of f(x) = 3x² + 7x - 2.", answer: "f'(x) = 6x + 7", marks: 4},
-    { topic: 'Matrices', type: 'mcq', question: 'Given matrix A = [[2, 1], [3, 4]], find its determinant.', options: ['5', '11', '-5', '8'], correct: 0, marks: 2 },
-    { topic: 'Trigonometry', type: 'calculation', question: 'If sin(θ) = 0.5, find θ for 0° < θ < 90°', answer: '30°', marks: 2 },
-    { topic: 'Statistics', type: 'mcq', question: 'What is the mode of the following set of numbers: 2, 4, 5, 5, 6, 7?', options: ['2', '4', '5', '6'], correct: 2, marks: 1 }
-  ],
-  chemistry: [
-    { topic: 'Introduction to Chemistry', type: 'mcq', question: 'Which of the following apparatus is most suitable for accurately measuring 25.0 cm³ of a solution?', options: ['Beaker', 'Measuring cylinder', 'Pipette', 'Conical flask'], correct: 2, marks: 1 },
-    { topic: 'Acids, Bases and Indicators', type: 'mcq', question: 'Which of the following is a property of an acidic solution?', options: ['Has a pH greater than 7', 'Turns red litmus paper blue', 'Feels soapy', 'Reacts with metals to produce hydrogen gas'], correct: 3, marks: 1 },
-    { topic: 'The Mole Concept', type: 'calculation', question: 'Calculate the number of moles in 36g of water (H₂O). (H=1, O=16)', answer: '2 moles', marks: 3 },
-    { topic: 'Organic Chemistry I (Hydrocarbons)', type: 'mcq', question: 'What is the general formula for alkanes?', options: ['CnH2n', 'CnH2n+2', 'CnH2n-2', 'CnHn'], correct: 1, marks: 1 },
-    { topic: 'Radioactivity', type: 'mcq', question: 'Which type of radiation is a high-energy electron?', options: ['Alpha particle', 'Beta particle', 'Gamma ray', 'Neutron'], correct: 1, marks: 1 },
-    { topic: 'Structure and Bonding', type: 'mcq', question: 'What type of bonding is present in a diamond?', options: ['Ionic', 'Metallic', 'Covalent', 'Van der Waals'], correct: 2, marks: 1 }
-  ],
-  biology: [
-    { topic: 'The Cell', type: 'mcq', question: 'Which organelle is known as the "powerhouse" of the cell?', options: ['Nucleus', 'Ribosome', 'Mitochondrion', 'Chloroplast'], correct: 2, marks: 1 },
-    { topic: 'Nutrition in Plants and Animals', type: 'mcq', question: 'What is the primary function of bile in digestion?', options: ['Breaking down proteins', 'Emulsifying fats', 'Digesting carbohydrates', 'Absorbing vitamins'], correct: 1, marks: 1 },
-    { topic: 'Genetics', type: 'short-answer', question: 'Define the term "phenotype".', answer: 'The observable physical properties of an organism.', marks: 2 },
-    { topic: 'Ecology', type: 'mcq', question: 'Which of the following is a biotic factor in an ecosystem?', options: ['Sunlight', 'Temperature', 'Bacteria', 'Water'], correct: 2, marks: 1 }
-  ],
-  physics: [
-    { topic: 'Force', type: 'calculation', question: 'A force of 20N acts on an object of mass 5kg. Calculate the acceleration.', answer: '4 m/s²', marks: 2 },
-    { topic: 'Waves', type: 'mcq', question: 'Which of the following is a transverse wave?', options: ['Sound', 'Light', 'Ultrasound', 'Shockwave'], correct: 1, marks: 1 },
-    { topic: 'Electronics', type: 'short-answer', question: 'What does the acronym LED stand for?', answer: 'Light Emitting Diode', marks: 1 },
-    { topic: 'Thin Lenses', type: 'mcq', question: 'A converging lens is also known as a...', options: ['Concave lens', 'Convex lens', 'Plane mirror', 'Prism'], correct: 1, marks: 1 }
-  ]
-};
 
   async generateAIQuestions(subject, count, topics) {
     const allSubjectQuestions = QUESTION_BANK[subject] || [];
