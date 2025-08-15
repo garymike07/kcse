@@ -131,39 +131,6 @@ const KCSE_STRUCTURES = {
   }
 };
 
-// Question Bank for KCSE Subjects
-const QUESTION_BANK = {
-  mathematics: [
-    { topic: 'Numbers', type: 'mcq', question: 'What is the value of 2³ + 3²?', options: ['17', '12', '15', '25'], correct: 0, marks: 2 },
-    { topic: 'Algebraic Expressions', type: 'calculation', question: 'Simplify the expression: 3(x + 2y) - 2(2x - y)', answer: '-x + 8y', marks: 3 },
-    { topic: 'Linear Equations', type: 'calculation', question: 'Solve for y: 4y - 8 = 2y + 2', answer: 'y = 5', marks: 3 },
-    { topic: 'Geometry', type: 'calculation', question: 'The angles of a triangle are in the ratio 1:2:3. Find the size of the largest angle.', answer: '90 degrees', marks: 3 },
-    { topic: 'Calculus (Differentiation and Integration)', type: 'calculation', question: "Find the derivative of f(x) = 3x² + 7x - 2.", answer: "f'(x) = 6x + 7", marks: 4},
-    { topic: 'Matrices', type: 'mcq', question: 'Given matrix A = [[2, 1], [3, 4]], find its determinant.', options: ['5', '11', '-5', '8'], correct: 0, marks: 2 },
-    { topic: 'Trigonometry', type: 'calculation', question: 'If sin(θ) = 0.5, find θ for 0° < θ < 90°', answer: '30°', marks: 2 },
-    { topic: 'Statistics', type: 'mcq', question: 'What is the mode of the following set of numbers: 2, 4, 5, 5, 6, 7?', options: ['2', '4', '5', '6'], correct: 2, marks: 1 }
-  ],
-  chemistry: [
-    { topic: 'Introduction to Chemistry', type: 'mcq', question: 'Which of the following apparatus is most suitable for accurately measuring 25.0 cm³ of a solution?', options: ['Beaker', 'Measuring cylinder', 'Pipette', 'Conical flask'], correct: 2, marks: 1 },
-    { topic: 'Acids, Bases and Indicators', type: 'mcq', question: 'Which of the following is a property of an acidic solution?', options: ['Has a pH greater than 7', 'Turns red litmus paper blue', 'Feels soapy', 'Reacts with metals to produce hydrogen gas'], correct: 3, marks: 1 },
-    { topic: 'The Mole Concept', type: 'calculation', question: 'Calculate the number of moles in 36g of water (H₂O). (H=1, O=16)', answer: '2 moles', marks: 3 },
-    { topic: 'Organic Chemistry I (Hydrocarbons)', type: 'mcq', question: 'What is the general formula for alkanes?', options: ['CnH2n', 'CnH2n+2', 'CnH2n-2', 'CnHn'], correct: 1, marks: 1 },
-    { topic: 'Radioactivity', type: 'mcq', question: 'Which type of radiation is a high-energy electron?', options: ['Alpha particle', 'Beta particle', 'Gamma ray', 'Neutron'], correct: 1, marks: 1 },
-    { topic: 'Structure and Bonding', type: 'mcq', question: 'What type of bonding is present in a diamond?', options: ['Ionic', 'Metallic', 'Covalent', 'Van der Waals'], correct: 2, marks: 1 }
-  ],
-  biology: [
-    { topic: 'The Cell', type: 'mcq', question: 'Which organelle is known as the "powerhouse" of the cell?', options: ['Nucleus', 'Ribosome', 'Mitochondrion', 'Chloroplast'], correct: 2, marks: 1 },
-    { topic: 'Nutrition in Plants and Animals', type: 'mcq', question: 'What is the primary function of bile in digestion?', options: ['Breaking down proteins', 'Emulsifying fats', 'Digesting carbohydrates', 'Absorbing vitamins'], correct: 1, marks: 1 },
-    { topic: 'Genetics', type: 'short-answer', question: 'Define the term "phenotype".', answer: 'The observable physical properties of an organism.', marks: 2 },
-    { topic: 'Ecology', type: 'mcq', question: 'Which of the following is a biotic factor in an ecosystem?', options: ['Sunlight', 'Temperature', 'Bacteria', 'Water'], correct: 2, marks: 1 }
-  ],
-  physics: [
-    { topic: 'Force', type: 'calculation', question: 'A force of 20N acts on an object of mass 5kg. Calculate the acceleration.', answer: '4 m/s²', marks: 2 },
-    { topic: 'Waves', type: 'mcq', question: 'Which of the following is a transverse wave?', options: ['Sound', 'Light', 'Ultrasound', 'Shockwave'], correct: 1, marks: 1 },
-    { topic: 'Electronics', type: 'short-answer', question: 'What does the acronym LED stand for?', answer: 'Light Emitting Diode', marks: 1 },
-    { topic: 'Thin Lenses', type: 'mcq', question: 'A converging lens is also known as a...', options: ['Concave lens', 'Convex lens', 'Plane mirror', 'Prism'], correct: 1, marks: 1 }
-  ]
-};
 
 // KCSE Dynamic Exam Simulator - JavaScript
 
@@ -171,6 +138,7 @@ const QUESTION_BANK = {
 class KCSEApp {
   constructor() {
     this.currentExam = null;
+    this.rawExamData = null; // To store the full API response
     this.currentQuestion = 0;
     this.examTimer = null;
     this.examStartTime = null;
@@ -261,7 +229,7 @@ class KCSEApp {
         paperType
       });
 
-      this.startExam(examData);
+      this.showBookletPreview(examData);
     } catch (error) {
       console.error('Error generating exam:', error);
       alert(`Failed to generate exam: ${error.message}. Please check the console for details.`);
@@ -270,126 +238,82 @@ class KCSEApp {
     }
   }
 
+  showBookletPreview(examData) {
+    const bookletModal = document.getElementById('booklet-modal');
+    const bookletContentArea = document.getElementById('booklet-content-area');
+    const downloadPdfBtn = document.getElementById('download-pdf-btn');
+    const startExamBtn = document.getElementById('start-exam-btn');
+
+    // Inject the HTML booklet content
+    bookletContentArea.innerHTML = this.rawExamData.html_booklet;
+
+    // Show the modal
+    bookletModal.classList.add('active');
+    bookletModal.style.display = 'flex';
+
+    // Add event listener for PDF download
+    downloadPdfBtn.onclick = () => {
+      const { filename, html_for_pdf } = this.rawExamData.pdf_ready;
+      const opt = {
+        margin:       [0.5, 0.5, 0.5, 0.5],
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().from(html_for_pdf).set(opt).save();
+    };
+
+    // Add event listener for starting the exam
+    startExamBtn.onclick = () => {
+      this.currentExam = examData; // Set the transformed exam data before starting
+      bookletModal.classList.remove('active');
+      bookletModal.style.display = 'none';
+      this.startExam(examData);
+    };
+  }
+
   async generateExamWithAI(params) {
     const { subject, formLevel, paperType } = params;
+    const apiUrl = `/api/generate_exam?subject=${subject}&form=${formLevel}&paper_set=${paperType}`;
 
-    const paperStructure = KCSE_STRUCTURES[subject]?.[paperType];
-    if (!paperStructure) {
-        throw new Error(`Invalid paper structure for ${subject} Paper ${paperType}`);
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Server returned a non-JSON error' }));
+            throw new Error(errorData.error || `Failed to fetch exam data from the server. Status: ${response.status}`);
+        }
+
+        const apiResponse = await response.json();
+        this.rawExamData = apiResponse; // Store the raw response
+
+        // Transform API response to the format expected by the client UI
+        const transformedExamData = {
+            id: apiResponse.metadata.generation_date,
+            title: `${this.capitalizeFirst(apiResponse.metadata.subject)} Paper ${apiResponse.metadata.paper_set}`,
+            subjects: [apiResponse.metadata.subject],
+            difficulty: `Form ${apiResponse.metadata.form}`,
+            duration: parseInt(apiResponse.metadata.time_allowed) * 60, // in minutes
+            totalMarks: apiResponse.metadata.total_marks,
+            questions: apiResponse.questions.map(q => ({
+                id: `q_${q.qnum}`,
+                number: q.qnum,
+                question: q.text,
+                type: q.type,
+                marks: q.marks,
+                options: q.choices,
+                // 'correct' and 'answer' fields are intentionally omitted from API response.
+                // The client-side marking will need to be updated later to use the /api/grade_exam endpoint.
+            })),
+            type: 'custom',
+            structure: KCSE_STRUCTURES[subject]?.[paperType]
+        };
+
+        return transformedExamData;
+    } catch (error) {
+        console.error('Error fetching or processing exam data:', error);
+        throw new Error('Could not generate the exam. Please try again later.');
     }
-
-    const topics = KCSE_CURRICULUM[subject]?.[formLevel];
-    if (!topics) {
-        throw new Error(`Invalid curriculum for ${subject} Form ${formLevel}`);
-    }
-
-    const totalQuestions = paperStructure.sections.reduce((acc, section) => acc + (section.questionCount || 1), 0);
-
-    const questions = await this.generateAIQuestions(
-        subject,
-        totalQuestions,
-        topics
-    );
-
-    const subjectNames = {
-      mathematics: 'Mathematics', english: 'English', kiswahili: 'Kiswahili',
-      biology: 'Biology', chemistry: 'Chemistry', physics: 'Physics',
-      history: 'History', geography: 'Geography', cre: 'Christian Religious Education',
-      business: 'Business Studies', agriculture: 'Agriculture', computer: 'Computer Studies'
-    };
-    const subjectName = subjectNames[subject] || this.capitalizeFirst(subject);
-
-    return {
-        id: this.generateId(),
-        title: `${subjectName} Paper ${paperType}`,
-        subjects: [subject],
-        difficulty: `Form ${formLevel}`,
-        duration: paperStructure.duration,
-        totalMarks: paperStructure.totalMarks,
-        questions: questions,
-        type: 'custom',
-        structure: paperStructure
-    };
-  }
-
-  async generateAIQuestions(subject, count, topics) {
-    const allSubjectQuestions = QUESTION_BANK[subject] || [];
-    if (allSubjectQuestions.length === 0) {
-        console.warn(`No questions found in bank for subject: ${subject}`);
-        return this.generateSampleQuestions(count);
-    }
-
-    // Filter questions that match the specific topics for the form level
-    let topicSpecificQuestions = allSubjectQuestions.filter(q => topics.includes(q.topic));
-
-    // Create a set of the questions we already have to avoid duplicates
-    const selectedQuestions = new Set(topicSpecificQuestions.map(q => q.question));
-
-    // If we don't have enough topic-specific questions, fill with other questions from the same subject
-    if (topicSpecificQuestions.length < count) {
-        const otherQuestions = allSubjectQuestions.filter(q => !selectedQuestions.has(q.question));
-        const needed = count - topicSpecificQuestions.length;
-
-        const shuffledOthers = otherQuestions.sort(() => 0.5 - Math.random());
-        topicSpecificQuestions.push(...shuffledOthers.slice(0, needed));
-    }
-
-    // Shuffle the final list and slice to the exact count
-    const finalQuestions = topicSpecificQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
-
-    // Assign question numbers
-    return finalQuestions.map((q, index) => ({
-        ...q,
-        id: this.generateId(),
-        number: index + 1,
-        subject: subject,
-    }));
-  }
-
-  generateSampleQuestions(count) {
-    const sampleQuestions = [
-      {
-        id: 'q1',
-        type: 'mcq',
-        subject: 'mathematics',
-        question: 'What is the value of x in the equation 3x - 7 = 14?',
-        options: ['x = 5', 'x = 7', 'x = 9', 'x = 11'],
-        correct: 1,
-        marks: 2,
-        explanation: '3x - 7 = 14, so 3x = 21, therefore x = 7'
-      },
-      {
-        id: 'q2',
-        type: 'mcq',
-        subject: 'mathematics',
-        question: 'Which of the following is a prime number?',
-        options: ['15', '21', '23', '27'],
-        correct: 2,
-        marks: 1,
-        explanation: '23 is only divisible by 1 and itself, making it a prime number'
-      },
-      {
-        id: 'q3',
-        type: 'calculation',
-        subject: 'mathematics',
-        question: 'Calculate the perimeter of a rectangle with length 12 cm and width 8 cm.',
-        marks: 3,
-        answer: '40 cm',
-        explanation: 'Perimeter = 2(l + w) = 2(12 + 8) = 2(20) = 40 cm'
-      }
-    ];
-
-    const questions = [];
-    for (let i = 0; i < count; i++) {
-      const template = sampleQuestions[i % sampleQuestions.length];
-      questions.push({
-        ...template,
-        id: this.generateId(),
-        number: i + 1
-      });
-    }
-
-    return questions;
   }
 
   startExam(examData) {
@@ -650,7 +574,25 @@ class KCSEApp {
 
     this.showLoadingMessage('Marking your exam...');
 
+    // TODO: Implement handwritten answer upload flow
+    // 1. Add an "Upload Answers" button to the UI (e.g., in the results modal).
+    // 2. On click, open a file dialog to select answer sheet images.
+    // 3. On file selection, call the /api/upload_answers endpoint with the image data.
+    //    e.g., const ocrResult = await fetch('/api/upload_answers', { method: 'POST', body: formData });
+    //    const ocrData = await ocrResult.json();
+
+    // TODO: Replace client-side marking with a call to the /api/grade_exam endpoint
+    // This would be called after getting the OCR data.
+    // const gradingPayload = {
+    //   examData: this.rawExamData,
+    //   studentAnswers: ocrData // from the upload step
+    // };
+    // const gradingResult = await fetch('/api/grade_exam', { method: 'POST', body: JSON.stringify(gradingPayload) });
+    // const finalResults = await gradingResult.json();
+    // this.showResults(finalResults);
+
     try {
+      // The existing client-side marking is kept for now as a placeholder.
       const results = await this.markExam();
       this.showResults(results);
     } catch (error) {

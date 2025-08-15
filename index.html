@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -225,6 +226,23 @@
                     <button class="action-btn primary">Retake Exam</button>
                     <button class="action-btn secondary">Practice Weak Areas</button>
                     <button class="action-btn secondary">Download Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booklet Preview Modal -->
+        <div id="booklet-modal" class="modal">
+            <div class="modal-content booklet-interface">
+                <div class="booklet-header">
+                    <h2>Exam Preview</h2>
+                    <button id="close-booklet-modal" class="close-modal">×</button>
+                </div>
+                <div class="booklet-content" id="booklet-content-area">
+                    <!-- HTML booklet will be injected here -->
+                </div>
+                <div class="booklet-actions">
+                    <button id="download-pdf-btn" class="action-btn secondary">Download PDF</button>
+                    <button id="start-exam-btn" class="action-btn primary">Start Interactive Exam</button>
                 </div>
             </div>
         </div>
